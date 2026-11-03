@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Professional Portfolio</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #172554;
+        }
+
+        header {
+            background: #102a43;
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #102a43;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Welcome to My Portfolio</h1>
+    <p>My Professional Journey, Projects and Achievements</p>
+</header>
+
+<main>
+
+    <section>
+        <h2>About Me</h2>
+        <p>Welcome to my personal portfolio website.</p>
+    </section>
+
+    <section>
+        <h2>My Projects</h2>
+        <p>Explore my projects and their detailed information.</p>
+    </section>
+
+    <section>
+        <h2>Certificates</h2>
+        <p>My certificates and achievements.</p>
+    </section>
+
+    <section>
+        <h2>Contact</h2>
+        <p>Email | LinkedIn | Instagram</p>
+    </section>
+
+</main>
+
+<footer>
+    My Professional Portfolio
+</footer>
+
+<script>
+    const SUPABASE_URL = "https://ghpgtnxaryfbdullyovt.supabase.co/rest/v1/";
+
+    const SUPABASE_KEY = "sb_publishable_13b0nBZK1OvIjrgr7cV7ZA_UM04_k7u";
+
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    console.log("Supabase client initialized");
+</script>
+
+</body>
+</html>
