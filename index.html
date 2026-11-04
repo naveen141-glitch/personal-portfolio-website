@@ -98,6 +98,94 @@
     );
 
     console.log("Supabase client initialized");
+    // Load personal information
+async function loadSiteSettings() {
+    const { data, error } = await supabaseClient
+        .from("site_settings")
+        .select("*")
+        .eq("id", true)
+        .single();
+
+    if (error) {
+        console.error("Settings error:", error);
+        return;
+    }
+
+    document.getElementById("introduction").textContent =
+        data.introduction || "Welcome to my portfolio.";
+
+    document.getElementById("contact-email").textContent =
+        data.email || "Email not added";
+
+    document.getElementById("contact-linkedin").textContent =
+        data.linkedin_url || "LinkedIn not added";
+
+    document.getElementById("contact-instagram").textContent =
+        data.instagram_url || "Instagram not added";
+}
+
+// Load projects and certificates
+async function loadContent() {
+    const { data, error } = await supabaseClient
+        .from("content_items")
+        .select("*")
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
+
+    if (error) {
+        console.error("Content error:", error);
+        return;
+    }
+
+    const projects = document.getElementById("projects-list");
+    const certificates = document.getElementById("certificates-list");
+
+    projects.textContent = "";
+    certificates.textContent = "";
+
+    data.forEach(item => {
+        const section = document.createElement("div");
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.title;
+        section.appendChild(heading);
+
+        if (item.body) {
+            const description = document.createElement("p");
+            description.textContent = item.body;
+            section.appendChild(description);
+        }
+
+        if (item.external_url) {
+            const link = document.createElement("a");
+            link.href = item.external_url;
+            link.textContent = "View details";
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            section.appendChild(link);
+        }
+
+        const key = (item.section_key || "").toLowerCase();
+
+        if (key.includes("project")) {
+            projects.appendChild(section);
+        } else if (key.includes("certificate")) {
+            certificates.appendChild(section);
+        }
+    });
+
+    if (!projects.children.length) {
+        projects.textContent = "No published projects yet.";
+    }
+
+    if (!certificates.children.length) {
+        certificates.textContent = "No published certificates yet.";
+    }
+}
+
+// Start loading website content
+loadSiteSettings();
+loadContent();
 </script>
 
 </body>
