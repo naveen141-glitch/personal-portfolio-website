@@ -398,13 +398,13 @@ async function loadContent() {
         div.className = "item";
 
         const heading = document.createElement("h4");
-        heading.textContent = item.section_title;
+        heading.textContent = item.title;
 
         const category = document.createElement("p");
         category.textContent = "Section: " + item.section_key;
 
         const description = document.createElement("p");
-        description.textContent = item.text;
+        description.textContent = item.body;
 
         const editButton = document.createElement("button");
         editButton.textContent = "Edit";
@@ -429,11 +429,11 @@ async function loadContent() {
 
 async function editContent(item) {
 
-    const newTitle = prompt("Enter new title:", item.section_title);
+    const newTitle = prompt("Enter new title:", item.title);
 
     if (newTitle === null) return;
 
-    const newText = prompt("Enter new description:", item.text);
+    const newText = prompt("Enter new description:", item.body);
 
     if (newText === null) return;
 
@@ -445,9 +445,10 @@ async function editContent(item) {
     const { error } = await db
         .from("content_items")
         .update({
-            section_title: newTitle.trim(),
-            text: newText.trim()
-        })
+    title: newTitle.trim(),
+    body: newText.trim(),
+    updated_at: new Date().toISOString()
+})
         .eq("id", item.id);
 
     if (error) {
