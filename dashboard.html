@@ -344,12 +344,16 @@ async function() {
     }
 
     const { error } = await db
-        .from("content_items")
-        .insert({
-            section_key: sectionKey,
-            section_title: sectionTitle,
-            text: contentText
-        });
+        const { error } = await db
+    .from("content_items")
+    .insert({
+        section_key: sectionKey,
+        section_title: sectionKey === "projects" ? "Projects" :
+                       sectionKey === "certificates" ? "Certificates" : "About Me",
+        title: sectionTitle,
+        body: contentText,
+        created_by: currentUser.id
+    });
 
     if (error) {
         showMessage("Content error: " + error.message, false);
