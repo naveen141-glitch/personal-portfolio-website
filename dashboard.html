@@ -230,28 +230,30 @@ function showMessage(text, success = true) {
 }
 
 async function startDashboard() {
-    const { data, error } = await db.auth.getSession();
+    try {
+        const { data, error } = await db.auth.getSession();
 
-    if (error || !data.session) {
-        window.location.replace("admin.html");
-        return;
+        if (error) {
+            throw error;
+        }
+
+        if (!data.session) {
+            window.location.replace("admin.html");
+            return;
+        }
+
+        currentUser = data.session.user;
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+
+        await loadProfile();
+        await loadContent();
+
+    } catch (error) {
+        document.getElementById("loading").textContent =
+            "Access error: " + error.message;
     }
-
-    currentUser = data.session.user;
-
-    // Confirm the authenticated session
-    const { error: authError } = await db.auth.getUser();
-
-    if (authError) {
-        window.location.replace("admin.html");
-        return;
-    }
-
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-
-    await loadProfile();
-    await loadContent();
 }
 
 // LOAD PROFILE
