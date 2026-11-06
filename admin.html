@@ -141,9 +141,15 @@
                 }
 
                 message.textContent =
-                    "Login successful! Administrator authenticated.";
+    "Login successful! Administrator authenticated.";
 
-                message.style.color = "green";
+message.style.color = "green";
+
+button.textContent = "Login successful!";
+
+setTimeout(function() {
+    window.location.href = "dashboard.html";
+}, 1500);
             }
         );
     </script>
