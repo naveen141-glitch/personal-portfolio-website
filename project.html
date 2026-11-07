@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | My Portfolio</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 25px;
+            background: #f5f7fa;
+            color: #222;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: #123b65;
+        }
+
+        .description {
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        a {
+            color: #087b65;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a class="back" href="index.html">← Back to Portfolio</a>
+
+    <h1 id="projectTitle">Loading project...</h1>
+
+    <p id="projectDescription" class="description"></p>
+
+    <p id="projectMessage"></p>
+
+    <p id="externalLink"></p>
+
+</div>
+
+<script>
+const SUPABASE_URL = "https://ghpgtnxaryfbdullyovt.supabase.co";
+
+// Copy the same publishable key used in your index.html.
+const SUPABASE_KEY = "sb_publishable_13b0nBZK1OvIjrgr7cV7ZA_UM04_k7u";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+async function loadProject() {
+
+    const projectId =
+        new URLSearchParams(window.location.search).get("id");
+
+    const title = document.getElementById("projectTitle");
+    const description =
+        document.getElementById("projectDescription");
+    const message = document.getElementById("projectMessage");
+
+    if (!projectId) {
+        title.textContent = "Project not found";
+        message.textContent = "No project ID was provided.";
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("content_items")
+        .select("*")
+        .eq("id", projectId)
+        .eq("is_published", true)
+        .single();
+
+    if (error || !data ||
+        !(data.section_key || "").toLowerCase().includes("project")) {
+
+        title.textContent = "Project not found";
+        message.textContent =
+            "This project is unavailable or has not been published.";
+        return;
+    }
+
+    title.textContent = data.title || "Project Details";
+    description.textContent = data.body || "No description available.";
+
+    if (data.external_url) {
+        const link = document.createElement("a");
+        link.href = data.external_url;
+        link.textContent = "Visit external project link";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.getElementById("externalLink").appendChild(link);
+    }
+}
+
+loadProject();
+</script>
+
+</body>
+</html>
