@@ -144,8 +144,32 @@ async function loadContent() {
     certificates.textContent = "";
 
     data.forEach(item => {
-        const section = document.createElement("div");
+    const section = document.createElement("div");
+    const key = (item.section_key || "").toLowerCase();
 
+    if (key.includes("project")) {
+        section.className = "project-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.title;
+        section.appendChild(heading);
+
+        const link = document.createElement("a");
+
+        if (item.external_url) {
+            link.href = item.external_url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+        } else {
+            link.href = "project.html?id=" + encodeURIComponent(item.id);
+        }
+
+        link.textContent = "View full project";
+        section.appendChild(link);
+
+        projects.appendChild(section);
+
+    } else if (key.includes("certificate")) {
         const heading = document.createElement("h3");
         heading.textContent = item.title;
         section.appendChild(heading);
@@ -159,20 +183,15 @@ async function loadContent() {
         if (item.external_url) {
             const link = document.createElement("a");
             link.href = item.external_url;
-            link.textContent = "View details";
+            link.textContent = "View certificate";
             link.target = "_blank";
             link.rel = "noopener noreferrer";
             section.appendChild(link);
         }
 
-        const key = (item.section_key || "").toLowerCase();
-
-        if (key.includes("project")) {
-            projects.appendChild(section);
-        } else if (key.includes("certificate")) {
-            certificates.appendChild(section);
-        }
-    });
+        certificates.appendChild(section);
+    }
+});
 
     if (!projects.children.length) {
         projects.textContent = "No published projects yet.";
