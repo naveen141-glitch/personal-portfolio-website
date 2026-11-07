@@ -303,6 +303,61 @@ async function loadProfile() {
         data.instagram_url || "";
 }
 
+    // UPLOAD PROFILE PHOTO
+
+document.getElementById("uploadAvatar").onclick =
+async function() {
+
+    const file = document.getElementById("avatarFile").files[0];
+
+    if (!file) {
+        showMessage("Please select a photograph first.", false);
+        return;
+    }
+
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+        showMessage("Please select a PNG, JPG, or WebP image.", false);
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showMessage("Image size must be less than 5 MB.", false);
+        return;
+    }
+
+    const extension = file.name.split(".").pop().toLowerCase();
+
+    const filePath =
+        "avatars/" + currentUser.id + "-" + Date.now() + "." + extension;
+
+    const { error: uploadError } = await db.storage
+        .from("portfolio-files")
+        .upload(filePath, file, {
+            contentType: file.type
+        });
+
+    if (uploadError) {
+        showMessage("Photo upload failed: " + uploadError.message, false);
+        return;
+    }
+
+    const { error: updateError } = await db
+        .from("site_settings")
+        .update({
+            avatar_path: filePath,
+            updated_at: new Date().toISOString()
+        })
+        .eq("id", settingsId);
+
+    if (updateError) {
+        showMessage("Photo uploaded, but profile update failed: " + updateError.message, false);
+        return;
+    }
+
+    showMessage("Profile photograph uploaded successfully!");
+    document.getElementById("avatarFile").value = "";
+};
+    
 // SAVE PROFILE
 
 document.getElementById("saveProfile").onclick =
