@@ -354,7 +354,7 @@ async function() {
                        sectionKey === "certificates" ? "Certificates" : "About Me",
         title: sectionTitle,
         body: contentText,
-        created_by: currentUser.id
+        created_by: currentUser.id,is_published: true
     });
 
     if (error) {
