@@ -437,21 +437,26 @@ async function editContent(item) {
 
     const newText = prompt("Enter new description:", item.body);
 
-    if (newText === null) return;
+if (newText === null) return;
 
-    if (!newTitle.trim() || !newText.trim()) {
-        showMessage("Title and description cannot be empty.", false);
-        return;
-    }
+const newUrl = prompt("Enter external URL (optional):", item.external_url || "");
 
-    const { error } = await db
-        .from("content_items")
-        .update({
-    title: newTitle.trim(),
-    body: newText.trim(),
-    updated_at: new Date().toISOString()
-})
-        .eq("id", item.id);
+if (newUrl === null) return;
+
+if (!newTitle.trim() || !newText.trim()) {
+    showMessage("Title and description cannot be empty.", false);
+    return;
+}
+
+const { error } = await db
+    .from("content_items")
+    .update({
+        title: newTitle.trim(),
+        body: newText.trim(),
+        external_url: newUrl.trim() || null,
+        updated_at: new Date().toISOString()
+    })
+    .eq("id", item.id);
 
     if (error) {
         showMessage("Update failed: " + error.message, false);
