@@ -48,6 +48,17 @@
 
 <header>
     <h1>Welcome to My Portfolio</h1>
+
+    <div class="profile-image">
+        <img id="profile-image"
+             src="https://via.placeholder.com/150"
+             alt="Profile Photo">
+    </div>
+
+    <h2 id="display-name">Your Name</h2>
+
+    <p id="tagline">Your Tagline</p>
+
     <p>My Professional Journey, Projects and Achievements</p>
 </header>
 
@@ -111,8 +122,14 @@ async function loadSiteSettings() {
         return;
     }
 
-    document.getElementById("introduction").textContent =
-        data.introduction || "Welcome to my portfolio.";
+    document.getElementById("display-name").textContent =
+    data.display_name || "Your Name";
+
+document.getElementById("tagline").textContent =
+    data.tagline || "Your Tagline";
+
+document.getElementById("introduction").textContent =
+    data.introduction || "Welcome to my portfolio.";
 
     document.getElementById("contact-email").textContent =
         data.email || "Email not added";
